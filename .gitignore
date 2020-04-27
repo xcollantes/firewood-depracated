@@ -130,3 +130,9 @@ dmypy.json
 
 # SWP
 *.swp
+
+screenshots/
+
+config.yaml
+
+

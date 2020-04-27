@@ -21,13 +21,7 @@ logging.basicConfig(
 chrome_options = Options()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
-
-screenshot_location = 'screenshots/{}-{}.png'.format(
-                                            datetime.datetime.now().strftime(
-                                              "%Y-%-%d-%H%M%S"
-                                            ),
-                                            random.randint(999999)
-                                          )
+chrome_options.add_argument('--start-maximized')
 
 os_driver = ''
 if platform.system() == 'Linux':
@@ -50,15 +44,21 @@ WEBDRIVER_PATH = '{current_path}/{driver_type}'.format(
                                                 )
 logging.debug('{}'.format(WEBDRIVER_PATH))
 
+
 def main():
   driver = webdriver.Chrome(WEBDRIVER_PATH, options=chrome_options)
   logging.info("Using URL: {inURL}".format(inURL=URL))
   driver.get(URL)
+  driver.implicitly_wait(30)
 
   screenshot(driver)
-  for x in range(5):
+  for x in range(3):
     time.sleep(1)
     logging.debug("SLEEP " + str(x))
+
+  screenshot(driver)
+
+
 
   
 
@@ -68,6 +68,13 @@ def main():
 def screenshot(driver):
   """Take current screenshot of window.
   """
+  screenshot_location = 'screenshots/{}-{}.png'.format(
+                                                 datetime.datetime.now().strftime(
+                                                   "%Y-%m-%d-%H%M%S"
+                                                 ),
+                                                 random.randint(0, 999999)
+                                               )
+
   driver.save_screenshot(screenshot_location)
   logging.info('Screenshot taken! Saved in: {}'.format(screenshot_location))
 
