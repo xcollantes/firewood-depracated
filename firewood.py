@@ -4,6 +4,9 @@
 import logging
 import platform
 import os
+import time
+import datetime
+import random
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -18,6 +21,13 @@ logging.basicConfig(
 chrome_options = Options()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
+
+screenshot_location = 'screenshots/{}-{}.png'.format(
+                                            datetime.datetime.now().strftime(
+                                              "%Y-%-%d-%H%M%S"
+                                            ),
+                                            random.randint(999999)
+                                          )
 
 os_driver = ''
 if platform.system() == 'Linux':
@@ -45,13 +55,22 @@ def main():
   logging.info("Using URL: {inURL}".format(inURL=URL))
   driver.get(URL)
 
+  screenshot(driver)
   for x in range(5):
     time.sleep(1)
-    logging.debug("SLEEP " + x)
+    logging.debug("SLEEP " + str(x))
 
   
 
   driver.close()
+
+
+def screenshot(driver):
+  """Take current screenshot of window.
+  """
+  driver.save_screenshot(screenshot_location)
+  logging.info('Screenshot taken! Saved in: {}'.format(screenshot_location))
+
 
 if __name__=='__main__':
   main()
